@@ -4,7 +4,6 @@ package uq.comp3506.a2.structures;
 
 import java.util.List;
 import java.util.ArrayList;
-import uq.comp3506.a2.structures.Entry;
 
 /**
  * Supplied by the COMP3506/7505 teaching team, Semester 2, 2025.
@@ -30,7 +29,6 @@ public class Heap<K extends Comparable<K>, V> {
      */
     public Heap() {
         this.data = new ArrayList<>();
-        // Implement me!
     }
 
     /**

@@ -11,7 +11,6 @@ import uq.comp3506.a2.structures.Edge;
 import uq.comp3506.a2.structures.Heap;
 import uq.comp3506.a2.structures.Tunnel;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedList;

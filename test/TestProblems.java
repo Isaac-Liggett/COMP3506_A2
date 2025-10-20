@@ -3,9 +3,6 @@
 */
 
 import uq.comp3506.a2.Problems;
-import uq.comp3506.a2.structures.Heap;
-import uq.comp3506.a2.structures.OrderedMap;
-import uq.comp3506.a2.structures.UnorderedMap;
 import uq.comp3506.a2.structures.Vertex;
 import uq.comp3506.a2.structures.Edge;
 import uq.comp3506.a2.structures.Tunnel;
