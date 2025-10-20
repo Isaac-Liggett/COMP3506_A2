@@ -38,7 +38,7 @@ public class Problems {
      * or -1 if no light fittings are provided
      * Note: We promise that the input List will be an ArrayList.
      */
-    public static double tunnelLighting(int tunnelLength, ArrayList<Integer> lightIntervals) {
+    public static double tunnelLighting(int tunnelLength, List<Integer> lightIntervals) {
         if (lightIntervals == null || lightIntervals.isEmpty()) {
             return -1; // No lights provided
         }
@@ -75,6 +75,7 @@ public class Problems {
      * vertices.
      */
     public static <S, U> TopologyType topologyDetection(List<Edge<S, U>> edgeList) {
+
         // Convert EdgeList into Adjacency List
         UnorderedMap<Vertex<S>, List<Vertex<S>>> nodes = new UnorderedMap<>();
 
