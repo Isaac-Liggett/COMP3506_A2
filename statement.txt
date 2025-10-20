@@ -1,0 +1,14 @@
+Submission counter: 0 << Keep track of your submission counts
+
+Student ID:
+
+Statement
+---------
+AI has only been used to generate the testcases for my data structures and problems. Below are the resources
+I accessed for specific implementations:
+
+https://www.geeksforgeeks.org/dsa/dijkstras-shortest-path-algorithm-greedy-algo-7/
+
+Refer to the referencing guide on the LMS for details on what needs to go in
+here. If in doubt, put your references here. Ignorance is NOT an excuse for
+skipping this process.
