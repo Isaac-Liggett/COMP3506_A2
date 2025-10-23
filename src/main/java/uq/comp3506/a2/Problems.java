@@ -90,58 +90,67 @@ public class Problems {
             nodes.get(edge.getVertex2()).add(edge.getVertex1());
         }
 
-        // Classification
-        boolean anyTree = false;
-        boolean anyGraph = false;
-        int componentCount = 0;
-
-        // Perform a BFS on the graph
+        List<Vertex<S>> queue = new LinkedList<>();
         UnorderedMap<Vertex<S>, Integer> visited = new UnorderedMap<>();
-        List<Vertex<S>> queue = new ArrayList<>();
-        queue.add(edgeList.getFirst().getVertex1());
 
-        while (true) {
-            if (!queue.isEmpty()) {
-                componentCount += 1;
-            }
+        boolean hasTree = false;
+        boolean hasGraph = false;
+        int numComponents = 0;
 
-            while (!queue.isEmpty()) {
-                Vertex<S> curr = queue.removeFirst();
-                if (visited.get(curr) != null) {
-                    anyGraph = true;
-                    continue;
-                }
-                visited.put(curr, 1);
-                queue.addAll(nodes.get(curr));
-            }
-
-            // Check for connectedness
-            Vertex<S> unvisitedNode = null;
-            for (Vertex<S> node : nodes.keys()) {
-                if (visited.get(node) == null) {
-                    unvisitedNode = node;
+        while(!visited.hasAll(nodes.keys())){
+            for(Vertex<S> vertex : nodes.keys()){
+                if(visited.get(vertex) == null){
+                    queue.add(vertex);
+                    numComponents += 1;
                     break;
                 }
             }
 
-            if (unvisitedNode == null) {
-                if (componentCount == 1 && anyTree && !anyGraph) {
-                    return TopologyType.CONNECTED_TREE;
-                } else if (componentCount == 1 && !anyTree && anyGraph) {
-                    return TopologyType.CONNECTED_GRAPH;
-                } else if (componentCount > 1 && anyTree && !anyGraph) {
-                    return TopologyType.FOREST;
-                } else if (componentCount > 1 && !anyTree && anyGraph) {
-                    return TopologyType.DISCONNECTED_GRAPH;
-                } else if (componentCount > 1 && anyTree && anyGraph) {
-                    return TopologyType.HYBRID;
-                } else {
-                    return TopologyType.UNKNOWN;
+            int numVertices = 0;
+            int numDegrees = 0;
+
+            while(!queue.isEmpty()){
+                Vertex<S> curr = queue.removeFirst();
+                if(visited.get(curr) == null){
+                    numVertices += 1;
+                    visited.put(curr, 1);
+
+                    for(Vertex<S> other : nodes.get(curr)){
+                        numDegrees += 1;
+                        queue.add(other);
+                    }
                 }
-            } else {
-                // Not connected
-                queue.add(unvisitedNode);
             }
+
+            int numEdges = numDegrees / 2;
+
+            if(numEdges+1 == numVertices){
+                hasTree = true;
+            }else{
+                hasGraph = true;
+            }
+        }
+
+        if(numComponents == 1){
+            if(hasTree && !hasGraph){
+                return TopologyType.CONNECTED_TREE;
+            }else if(!hasTree && hasGraph){
+                return TopologyType.CONNECTED_GRAPH;
+            }else {
+                return TopologyType.UNKNOWN;
+            }
+        }else if(numComponents > 1){
+            if(hasTree && !hasGraph){
+                return TopologyType.FOREST;
+            }else if(!hasTree && hasGraph){
+                return TopologyType.DISCONNECTED_GRAPH;
+            }else if(hasTree && hasGraph){
+                return TopologyType.HYBRID;
+            } else{
+                return TopologyType.UNKNOWN;
+            }
+        }else{
+            return TopologyType.UNKNOWN;
         }
     }
  
@@ -195,7 +204,6 @@ public class Problems {
             if (dist > threshold){
                 continue;
             }
-
 
             Integer prev = visited.get(node);
             if (prev != null && dist >= prev) continue; // shorter path exists

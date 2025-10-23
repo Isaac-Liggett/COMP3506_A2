@@ -189,4 +189,13 @@ public class UnorderedMap<K, V> implements MapInterface<K, V> {
         }
         return entries;
     }
+
+    public boolean hasAll(List<K> keys){
+        for(K key : keys){
+            if(this.get(key) == null){
+                return false;
+            }
+        }
+        return true;
+    }
 }

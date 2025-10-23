@@ -34,5 +34,10 @@ public class Entry<K, V> {
         this.value = value;
     }
 
-    // You may add more helper functions here, if you wish
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Entry<?, ?> entry)) return false;
+        return this.key.equals(entry.key) && this.value.equals(entry.value);
+    }
 }

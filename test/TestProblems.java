@@ -61,6 +61,7 @@ public class TestProblems {
             new Edge<>(vertices.get(3), vertices.get(6), 'R'),
             new Edge<>(vertices.get(5), vertices.get(6), 'Y'))
         );
+
         assert Problems.topologyDetection(disconnectedTree) == TopologyType.FOREST;
 
         // you can use these ones if you prefer jUnit testing instead
@@ -107,13 +108,6 @@ public class TestProblems {
         ));
 
         List<Entry<Integer, Integer>> actual = Problems.routeManagement(edgeList, origin, threshold);
-
-        for(Entry<Integer, Integer> ent : actual){
-            System.out.print(ent.getKey());
-            System.out.print(", ");
-            System.out.print(ent.getValue());
-            System.out.print("\n");
-        }
 
         assert expected.containsAll(actual) && actual.containsAll(expected);
     }
