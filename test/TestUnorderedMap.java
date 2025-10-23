@@ -24,7 +24,7 @@ public class TestUnorderedMap {
         assert map.get(1).equals("one") : "get(1) should return 'one'";
 
         // --- Test 4: Update existing key ---
-        assert map.put(1, "uno").equals("uno") : "put on existing key should return new value";
+        assert map.put(1, "uno").equals("one") : "put on existing key should return old value";
         assert map.get(1).equals("uno") : "Updated value should be 'uno'";
         assert map.size() == 1 : "Size should not increase on update";
 

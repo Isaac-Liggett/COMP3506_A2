@@ -48,7 +48,7 @@ public class Heap<K extends Comparable<K>, V> {
      * - If index is <= 0 returns -1
      */
     private int parent(int i) {
-        return (i - 1)/2;
+        return Math.floorDiv(i - 1, 2);
     }
 
     /**
@@ -70,12 +70,16 @@ public class Heap<K extends Comparable<K>, V> {
      */
     private void upHeap(int idx) {
         int i = idx;
-        while(i > 0 && this.data.get(this.parent(i)).getKey().compareTo(this.data.get(i).getKey()) > 0){
-            int newi = this.parent(i);
-            Entry<K, V> tmp = this.data.get(newi);
-            this.data.set(newi, this.data.get(i));
+        while (i > 0) {
+            int parentIdx = this.parent(i);
+            if (this.data.get(parentIdx).getKey().compareTo(this.data.get(i).getKey()) <= 0) {
+                break; // Heap property satisfied
+            }
+            // Swap with parent
+            Entry<K, V> tmp = this.data.get(parentIdx);
+            this.data.set(parentIdx, this.data.get(i));
             this.data.set(i, tmp);
-            i = newi;
+            i = parentIdx;
         }
     }
 
@@ -83,27 +87,27 @@ public class Heap<K extends Comparable<K>, V> {
      * Swaps the node at index i downwards until the heap property is satisfied
      */
     private void downHeap(int i) {
-        int LChild_idx = this.left(i);
-        int RChild_idx = this.right(i);
+        while (true) {
+            int LChild_idx = this.left(i);
+            int RChild_idx = this.right(i);
+            int smallest = i;
 
-        while((LChild_idx < this.size && this.data.get(LChild_idx).getKey().compareTo(this.data.get(i).getKey()) < 0) || (RChild_idx < this.size && this.data.get(RChild_idx).getKey().compareTo(this.data.get(i).getKey()) < 0)){
+            if (LChild_idx < size && data.get(LChild_idx).getKey().compareTo(data.get(smallest).getKey()) < 0) {
+                smallest = LChild_idx;
+            }
+            if (RChild_idx < size && data.get(RChild_idx).getKey().compareTo(data.get(smallest).getKey()) < 0) {
+                smallest = RChild_idx;
+            }
 
-            int swapidx;
-            if(LChild_idx < this.size && this.data.get(LChild_idx).getKey().compareTo(this.data.get(i).getKey()) < 0){
-                swapidx = LChild_idx;
-            }else if(RChild_idx < this.size && this.data.get(RChild_idx).getKey().compareTo(this.data.get(i).getKey()) < 0){
-                swapidx = RChild_idx;
-            }else{
+            if (smallest == i) {
                 break;
             }
 
-            Entry<K, V> tmp = this.data.get(swapidx);
-            this.data.set(swapidx, this.data.get(i));
-            this.data.set(i, tmp);
-            i = swapidx;
+            Entry<K, V> tmp = data.get(i);
+            data.set(i, data.get(smallest));
+            data.set(smallest, tmp);
 
-            LChild_idx = this.left(i);
-            RChild_idx = this.right(i);
+            i = smallest;
         }
     }
 

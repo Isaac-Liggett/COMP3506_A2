@@ -91,23 +91,30 @@ public class UnorderedMap<K, V> implements MapInterface<K, V> {
     public V put(K key, V value) {
         int location = Math.abs(key.hashCode()) % this.capacity;
 
-        try{
-            while(this.data[location] != null && this.data[location] != this.TOMBSTONE){
-                if (this.data[location].getKey() == key) {
-                    this.size -= 1;
-                    break;
-                }
-                location += 1;
+        while (true) {
+            Entry<K, V> entry = this.data[location];
+
+            if (entry == null || entry == this.TOMBSTONE) {
+                this.data[location] = new Entry<>(key, value);
+                this.size++;
+                return value;
             }
 
-            this.data[location] = new Entry<K, V>(key, value);
-        }catch(ArrayIndexOutOfBoundsException e){
-            this.resize();
-            this.put(key, value);
-            this.size -= 1;
+            if (entry.getKey().equals(key)) {
+                V oldValue = this.data[location].getValue();
+                this.data[location].setValue(value);
+                return oldValue;
+            }
+
+            // Linear probe with wrap-around
+            location = (location + 1) % this.capacity;
+
+            if (location == Math.abs(key.hashCode()) % this.capacity) {
+                // We’ve looped around, need to resize
+                this.resize();
+                return this.put(key, value);
+            }
         }
-        this.size += 1;
-        return value;
     }
 
     /**

@@ -240,15 +240,15 @@ public class Problems {
             return -1;
         }
 
-        ArrayList<Integer>[] adj = new ArrayList[tunnels.size()];
+        UnorderedMap<Integer, List<Integer>> adj = new UnorderedMap<>();
 
-        for(int i = 0; i < tunnels.size(); i++){
-            adj[i] = new ArrayList<>();
+        for(Tunnel tunnel : tunnels){
+            adj.put(tunnel.getId(), new ArrayList<>());
         }
 
-        for(int i = 0; i < tunnels.size(); i++) {
+        for(int i : adj.keys()) {
             Tunnel a = tunnels.get(i);
-            for(int j = 0; j < tunnels.size(); j++) {
+            for(int j : adj.keys()) {
                 if(i == j) {
                     continue;
                 };
@@ -257,7 +257,7 @@ public class Problems {
                 double dy = a.getY() - b.getY();
                 double dist = Math.sqrt(dx*dx + dy*dy);
                 if(dist < a.getRadius()+0.000001) {
-                    adj[a.getId()].add(b.getId()); // i can flood j
+                    adj.get(a.getId()).add(b.getId()); // i can flood j
                 }
             }
         }
@@ -280,7 +280,7 @@ public class Problems {
                             visited.put(v, 1);
                         }
                     }else{
-                        queue.addAll(adj[curr_id]);
+                        queue.addAll(adj.get(curr_id));
                     }
                 }
             }
