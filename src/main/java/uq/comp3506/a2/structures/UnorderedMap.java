@@ -132,6 +132,10 @@ public class UnorderedMap<K, V> implements MapInterface<K, V> {
             location = (location + 1) % this.capacity;
         }
 
+        if(this.data[location] == null){
+            return null;
+        }
+
         return this.data[location].getValue();
     }
 
@@ -144,21 +148,22 @@ public class UnorderedMap<K, V> implements MapInterface<K, V> {
      */
     @Override
     public V remove(K key) {
-        int location = key.hashCode() % this.capacity;
+        int location = (key.hashCode() & 0x7fffffff) % this.capacity;
 
-        while(this.data[location] != null && this.data[location].getKey() != key){
-            location += 1;
+        while (this.data[location] != null) {
+            Entry<K, V> entry = this.data[location];
+
+            if (entry != this.TOMBSTONE && entry.getKey().equals(key)) {
+                V value = entry.getValue();
+                this.data[location] = this.TOMBSTONE;
+                this.size--;
+                return value;
+            }
+
+            location = (location + 1) % this.capacity;
         }
 
-        if(this.data[location] == null){
-            return null;
-        }
-
-        V value = this.data[location].getValue();
-
-        this.data[location] = this.TOMBSTONE;
-        this.size -= 1;
-        return value;
+        return null; // Key not found
     }
 
     /**
