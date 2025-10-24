@@ -123,18 +123,15 @@ public class UnorderedMap<K, V> implements MapInterface<K, V> {
      */
     @Override
     public V get(K key) {
-        int location = key.hashCode() % this.capacity;
+        int location = (key.hashCode() & 0x7fffffff) % this.capacity;
 
-        while(this.data[location] != null && this.data[location].getKey() != key){
+        while(this.data[location] != null && this.data[location].getKey() != null && !this.data[location].getKey().equals(key)){
             if(this.data[location].getKey() == null){
                 return null;
             }
-            location += 1;
+            location = (location + 1) % this.capacity;
         }
 
-        if(this.data[location] == null){
-            return null;
-        }
         return this.data[location].getValue();
     }
 
