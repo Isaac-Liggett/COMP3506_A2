@@ -16,7 +16,7 @@ public class TestUnorderedMap {
         assert map.size() == 0 : "Size should be 0 initially";
 
         // --- Test 2: Simple insert ---
-        assert map.put(1, "one") == "one" : "First insert should return the value inserted";
+        assert map.put(1, "one") == null : "First insert should return null";
         assert map.size() == 1 : "Size should be 1 after first insert";
         assert !map.isEmpty() : "Map should not be empty after insert";
 

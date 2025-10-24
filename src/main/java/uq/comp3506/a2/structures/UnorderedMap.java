@@ -89,6 +89,10 @@ public class UnorderedMap<K, V> implements MapInterface<K, V> {
      */
     @Override
     public V put(K key, V value) {
+        // Resize before insert if load factor is high
+        if ((double) this.size / this.capacity > 0.7) {
+            this.resize();
+        }
         int location = Math.abs(key.hashCode()) % this.capacity;
 
         while (true) {
@@ -97,7 +101,7 @@ public class UnorderedMap<K, V> implements MapInterface<K, V> {
             if (entry == null || entry == this.TOMBSTONE) {
                 this.data[location] = new Entry<>(key, value);
                 this.size++;
-                return value;
+                return null;
             }
 
             if (entry.getKey().equals(key)) {
@@ -106,14 +110,7 @@ public class UnorderedMap<K, V> implements MapInterface<K, V> {
                 return oldValue;
             }
 
-            // Linear probe with wrap-around
             location = (location + 1) % this.capacity;
-
-            if (location == Math.abs(key.hashCode()) % this.capacity) {
-                // We’ve looped around, need to resize
-                this.resize();
-                return this.put(key, value);
-            }
         }
     }
 
