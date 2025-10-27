@@ -89,24 +89,33 @@ public class UnorderedMap<K, V> implements MapInterface<K, V> {
      */
     @Override
     public V put(K key, V value) {
-        // Resize before insert if load factor is high
         if ((double) this.size / this.capacity > 0.7) {
             this.resize();
         }
-        int location = Math.abs(key.hashCode()) % this.capacity;
+
+        int location = (key.hashCode() & 0x7fffffff) % this.capacity;
+        int firstTombstone = -1;
 
         while (true) {
             Entry<K, V> entry = this.data[location];
 
-            if (entry == null || entry == this.TOMBSTONE) {
-                this.data[location] = new Entry<>(key, value);
+            if (entry == null) {
+                if (firstTombstone != -1) {
+                    this.data[firstTombstone] = new Entry<>(key, value);
+                } else {
+                    this.data[location] = new Entry<>(key, value);
+                }
                 this.size++;
                 return null;
             }
 
-            if (entry.getKey().equals(key)) {
-                V oldValue = this.data[location].getValue();
-                this.data[location].setValue(value);
+            if (entry == this.TOMBSTONE) {
+                if (firstTombstone == -1) {
+                    firstTombstone = location;
+                }
+            } else if (entry.getKey().equals(key)) {
+                V oldValue = entry.getValue();
+                entry.setValue(value);
                 return oldValue;
             }
 

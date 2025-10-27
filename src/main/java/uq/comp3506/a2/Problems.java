@@ -5,6 +5,7 @@ package uq.comp3506.a2;
 // You may wish to import more/other structures too
 import uq.comp3506.a2.structures.UnorderedMap;
 import uq.comp3506.a2.structures.Vertex;
+import uq.comp3506.a2.structures.LogicVertex;
 import uq.comp3506.a2.structures.Entry;
 import uq.comp3506.a2.structures.TopologyType;
 import uq.comp3506.a2.structures.Edge;
@@ -320,6 +321,58 @@ public class Problems {
      */
     public static int susDomination(List<Integer> sites, List<List<List<Integer>>> rules,
                                      List<Integer> startingSites) {
-        return -1;
+        UnorderedMap<Integer, LogicVertex<List<Integer>>> nodes = new UnorderedMap<>();
+
+        for(int site : sites){
+            nodes.put(site, new LogicVertex<>(site, new ArrayList<>()));
+        }
+
+        int logicNodesIndex = -1;
+        int ruleIdx = 0;
+        for(List<List<Integer>> rule : rules){
+            for(List<Integer> andNodeRequirements : rule){
+                nodes.put(logicNodesIndex, new LogicVertex<>(logicNodesIndex, List.of(ruleIdx)));
+                nodes.get(logicNodesIndex).setRequirements(andNodeRequirements);
+
+                for(int requirement : andNodeRequirements){
+                    nodes.get(requirement).getData().add(logicNodesIndex);
+                }
+                logicNodesIndex--;
+            }
+            ruleIdx++;
+        }
+
+        // Perform DFS
+        List<Integer> queue = new ArrayList<>(startingSites);
+        UnorderedMap<Integer, Integer> visited = new UnorderedMap<>();
+
+        while(!queue.isEmpty()){
+            int curr = queue.removeLast();
+
+            if(visited.get(curr) != null){
+                continue;
+            }
+
+            if(curr < 0){ // is an AND node
+                if(visited.hasAll(nodes.get(curr).getRequirements())){ // requirements satisifed
+                    visited.put(curr, 1);
+                    for(int node : nodes.get(curr).getData()){
+                        queue.add(node);
+                    }
+                }
+            }else{
+                visited.put(curr, 1);
+                queue.addAll(nodes.get(curr).getData());
+            }
+        }
+
+        int unvisited = 0;
+        for(int site : sites){
+            if(visited.get(site) == null){
+                unvisited++;
+            }
+        }
+
+        return unvisited;
     }
 }

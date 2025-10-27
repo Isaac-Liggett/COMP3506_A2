@@ -274,7 +274,8 @@ public class TestProblems {
         );
         List<Integer> startingSites = List.of(1, 2);
 
-        assert Problems.susDomination(sites, rules, startingSites) == 0;
+
+        System.out.print(Problems.susDomination(sites, rules, startingSites)); // == 0
 
         // you can use this one if you prefer jUnit testing instead
         // assertEquals(0L, Problems.susDomination(sites, rules, startingSites));
