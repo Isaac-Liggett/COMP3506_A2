@@ -330,6 +330,9 @@ public class Problems {
         int logicNodesIndex = -1;
         int ruleIdx = 0;
         for(List<List<Integer>> rule : rules){
+            if(rule.isEmpty()){
+                startingSites.add(ruleIdx);
+            }
             for(List<Integer> andNodeRequirements : rule){
                 nodes.put(logicNodesIndex, new LogicVertex<>(logicNodesIndex, List.of(ruleIdx)));
                 nodes.get(logicNodesIndex).setRequirements(andNodeRequirements);
@@ -342,12 +345,38 @@ public class Problems {
             ruleIdx++;
         }
 
+//        System.out.println("=== DEBUG: Graph Structure ===");
+//        for (int key : nodes.keys()) {
+//            LogicVertex<List<Integer>> v = nodes.get(key);
+//
+//            System.out.print("Node " + key);
+//
+//            if (key < 0) {
+//                System.out.print(" (AND)");
+//            } else {
+//                System.out.print(" (SITE)");
+//            }
+//
+//            System.out.print("  | requires: ");
+//            List<Integer> req = v.getRequirements();
+//            if (req == null || req.isEmpty()) System.out.print("[]");
+//            else System.out.print(req);
+//
+//            System.out.print("  | activates: ");
+//            List<Integer> data = v.getData();
+//            if (data == null || data.isEmpty()) System.out.print("[]");
+//            else System.out.print(data);
+//
+//            System.out.println();
+//        }
+//        System.out.println("=============================");
+
         // Perform DFS
         List<Integer> queue = new ArrayList<>(startingSites);
         UnorderedMap<Integer, Integer> visited = new UnorderedMap<>();
 
         while(!queue.isEmpty()){
-            int curr = queue.removeLast();
+            int curr = queue.removeFirst();
 
             if(visited.get(curr) != null){
                 continue;
