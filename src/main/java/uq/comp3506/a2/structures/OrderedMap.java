@@ -2,6 +2,7 @@
 
 package uq.comp3506.a2.structures;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -163,23 +164,69 @@ public class OrderedMap<K extends Comparable<K>, V> implements MapInterface<K, V
      * equal to `key`
      */
     public V nextGeq(K key) {
-        // Implement me!
-        return null;
+        Node<K,V> current = this.root;
+        Node<K, V> successor = null;
+
+        while(current != null){
+            if(current.getKey().compareTo(key) >= 0){
+                successor = current;
+                current = current.getLeft();
+            }else{
+                current = current.getRight();
+            }
+        }
+
+        return successor == null ? null : successor.getValue();
     }
 
     /** Returns the value associated with the largest key less than or
      * equal to `key`
      */
     public V nextLeq(K key) {
-        // Implement me!
-        return null;
+        Node<K,V> current = this.root;
+        Node<K, V> successor = null;
+
+        while(current != null){
+            if(current.getKey().compareTo(key) <= 0){
+                successor = current;
+                current = current.getRight();
+            }else{
+                current = current.getLeft();
+            }
+        }
+
+        return successor == null ? null : successor.getValue();
     }
 
 
     /** Returns a SORTED list of keys in the range [lo, hi]*/
     public List<K> keysInRange(K lo, K hi) {
         ArrayList<K> result = new ArrayList<>();
-        // Implement me!
+
+        if(this.root == null){
+            return result;
+        }
+
+        List<Node<K, V>> stack = new LinkedList<>();
+        Node<K,V> curr = root;
+
+        while (curr != null || !stack.isEmpty()) {
+            // Reach the left most Node of the curr Node
+            while (curr != null) {
+
+                stack.add(curr);
+                curr = curr.left;
+            }
+
+            curr = stack.removeFirst();
+
+            if(curr.getKey().compareTo(lo) >= 0 && curr.getKey().compareTo(hi) <= 0){
+                result.add(curr.getKey());
+            }
+
+            curr = curr.right;
+        }
+
         return result;
     }
 
