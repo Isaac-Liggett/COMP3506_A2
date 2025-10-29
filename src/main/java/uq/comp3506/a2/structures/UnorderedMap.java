@@ -21,9 +21,9 @@ public class UnorderedMap<K, V> implements MapInterface<K, V> {
     private Entry<K, V>[] data;
     private int capacity;
     private int size;
-    private float load_factor;
 
     private static final Entry TOMBSTONE = new Entry<>(null, null);
+
     /**
      * Constructs an empty UnorderedMap
      */
@@ -31,7 +31,6 @@ public class UnorderedMap<K, V> implements MapInterface<K, V> {
         this.data = new Entry[16];
         this.capacity = 16;
         this.size = 0;
-        this.load_factor = 0;
     }
 
     /**
@@ -64,15 +63,15 @@ public class UnorderedMap<K, V> implements MapInterface<K, V> {
         this.capacity = 16;
     }
 
-    private void resize(){
-        Entry<K, V>[] old_data = this.data.clone();
+    private void resize() {
+        final Entry<K, V>[] old_data = this.data.clone();
 
         this.capacity *= 2;
         this.size = 0;
         this.data = (Entry<K, V>[]) new Entry[this.capacity];
 
-        for(int i = 0; i < old_data.length; i++){
-            if (old_data[i] != null && old_data[i] != this.TOMBSTONE){
+        for (int i = 0; i < old_data.length; i++) {
+            if (old_data[i] != null && old_data[i] != this.TOMBSTONE) {
                 this.put(old_data[i].getKey(), old_data[i].getValue());
             }
         }
@@ -134,14 +133,18 @@ public class UnorderedMap<K, V> implements MapInterface<K, V> {
     public V get(K key) {
         int location = (key.hashCode() & 0x7fffffff) % this.capacity;
 
-        while(this.data[location] != null && this.data[location].getKey() != null && !this.data[location].getKey().equals(key)){
-            if(this.data[location].getKey() == null){
+        while (this.data[location] != null
+            && this.data[location].getKey() != null
+            && !this.data[location].getKey().equals(key)) {
+
+            if (this.data[location].getKey() == null) {
                 return null;
             }
+
             location = (location + 1) % this.capacity;
         }
 
-        if(this.data[location] == null){
+        if (this.data[location] == null) {
             return null;
         }
 
@@ -180,7 +183,7 @@ public class UnorderedMap<K, V> implements MapInterface<K, V> {
      *
      * @return an ArrayList of keys used currently in the map
      */
-    public List<K> keys(){
+    public List<K> keys() {
         List<K> keys = new ArrayList<>();
         for (Entry<K, V> data : this.data) {
             if (data != null && data != this.TOMBSTONE) {
@@ -195,7 +198,7 @@ public class UnorderedMap<K, V> implements MapInterface<K, V> {
      *
      * @return an ArrayList of key and value Entries used currently in the map
      */
-    public List<Entry<K, V>> entries(){
+    public List<Entry<K, V>> entries() {
         List<Entry<K, V>> entries = new ArrayList<>();
         for (Entry<K, V> data : this.data) {
             if (data != null && data != this.TOMBSTONE) {
@@ -205,9 +208,14 @@ public class UnorderedMap<K, V> implements MapInterface<K, V> {
         return entries;
     }
 
-    public boolean hasAll(List<K> keys){
-        for(K key : keys){
-            if(this.get(key) == null){
+    /**
+     * Determines whether each key in keys is in the map
+     * @param keys - keys to check
+     * @return true/false whether all keys are in the map
+     */
+    public boolean hasAll(List<K> keys) {
+        for (K key : keys) {
+            if (this.get(key) == null) {
                 return false;
             }
         }

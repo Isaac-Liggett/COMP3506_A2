@@ -36,8 +36,12 @@ public class Entry<K, V> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Entry<?, ?> entry)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Entry<?, ?> entry)) {
+            return false;
+        }
         return this.key.equals(entry.key) && this.value.equals(entry.value);
     }
 }

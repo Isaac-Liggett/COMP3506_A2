@@ -48,17 +48,17 @@ public class Problems {
 
         double maxRadius = 0;
 
-        for(int i = 0; i <= lightIntervals.size(); i++){
+        for (int i = 0; i <= lightIntervals.size(); i++) {
             double radius;
-            if(i == 0){
+            if (i == 0) {
                 radius = lightIntervals.get(i);
-            }else if(i == lightIntervals.size()){
-                radius = tunnelLength - lightIntervals.get(i-1);
-            }else{
-                radius = (double) (lightIntervals.get(i) - lightIntervals.get(i-1)) / 2.0;
+            } else if (i == lightIntervals.size()) {
+                radius = tunnelLength - lightIntervals.get(i - 1);
+            } else {
+                radius = (double) (lightIntervals.get(i) - lightIntervals.get(i - 1)) / 2.0;
             }
 
-            if(radius > maxRadius){
+            if (radius > maxRadius) {
                 maxRadius = radius;
             }
         }
@@ -80,11 +80,11 @@ public class Problems {
         // Convert EdgeList into Adjacency List
         UnorderedMap<Vertex<S>, List<Vertex<S>>> nodes = new UnorderedMap<>();
 
-        for(Edge<S, U> edge : edgeList){
-            if(nodes.get(edge.getVertex1()) == null){
+        for (Edge<S, U> edge : edgeList) {
+            if (nodes.get(edge.getVertex1()) == null) {
                 nodes.put(edge.getVertex1(), new ArrayList<>());
             }
-            if(nodes.get(edge.getVertex2()) == null){
+            if (nodes.get(edge.getVertex2()) == null) {
                 nodes.put(edge.getVertex2(), new ArrayList<>());
             }
             nodes.get(edge.getVertex1()).add(edge.getVertex2());
@@ -98,9 +98,9 @@ public class Problems {
         boolean hasGraph = false;
         int numComponents = 0;
 
-        while(!visited.hasAll(nodes.keys())){
-            for(Vertex<S> vertex : nodes.keys()){
-                if(visited.get(vertex) == null){
+        while (!visited.hasAll(nodes.keys())) {
+            for (Vertex<S> vertex : nodes.keys()) {
+                if (visited.get(vertex) == null) {
                     queue.add(vertex);
                     numComponents += 1;
                     break;
@@ -110,13 +110,13 @@ public class Problems {
             int numVertices = 0;
             int numDegrees = 0;
 
-            while(!queue.isEmpty()){
+            while (!queue.isEmpty()) {
                 Vertex<S> curr = queue.removeFirst();
-                if(visited.get(curr) == null){
+                if (visited.get(curr) == null) {
                     numVertices += 1;
                     visited.put(curr, 1);
 
-                    for(Vertex<S> other : nodes.get(curr)){
+                    for (Vertex<S> other : nodes.get(curr)) {
                         numDegrees += 1;
                         queue.add(other);
                     }
@@ -125,32 +125,32 @@ public class Problems {
 
             int numEdges = numDegrees / 2;
 
-            if(numEdges+1 == numVertices){
+            if (numEdges + 1 == numVertices) {
                 hasTree = true;
-            }else{
+            } else {
                 hasGraph = true;
             }
         }
 
-        if(numComponents == 1){
-            if(hasTree && !hasGraph){
+        if (numComponents == 1) {
+            if (hasTree && !hasGraph) {
                 return TopologyType.CONNECTED_TREE;
-            }else if(!hasTree && hasGraph){
+            } else if (!hasTree && hasGraph) {
                 return TopologyType.CONNECTED_GRAPH;
-            }else {
+            } else {
                 return TopologyType.UNKNOWN;
             }
-        }else if(numComponents > 1){
-            if(hasTree && !hasGraph){
+        } else if (numComponents > 1) {
+            if (hasTree && !hasGraph) {
                 return TopologyType.FOREST;
-            }else if(!hasTree && hasGraph){
+            } else if (!hasTree && hasGraph) {
                 return TopologyType.DISCONNECTED_GRAPH;
-            }else if(hasTree && hasGraph){
+            } else if (hasTree && hasGraph) {
                 return TopologyType.HYBRID;
-            } else{
+            } else {
                 return TopologyType.UNKNOWN;
             }
-        }else{
+        } else {
             return TopologyType.UNKNOWN;
         }
     }
@@ -202,16 +202,20 @@ public class Problems {
             int dist = curr.getKey();
             int node = curr.getValue();
 
-            if (dist > threshold){
+            if (dist > threshold) {
                 continue;
             }
 
             Integer prev = visited.get(node);
-            if (prev != null && dist >= prev) continue; // shorter path exists
+            if (prev != null && dist >= prev) {
+                continue; // shorter path exists
+            }
             visited.put(node, dist);
 
             List<Entry<Integer, Integer>> neighbours = nodes.get(node);
-            if (neighbours == null) continue;
+            if (neighbours == null) {
+                continue;
+            }
 
             for (Entry<Integer, Integer> next : neighbours) {
                 int newDist = dist + next.getValue();
@@ -237,27 +241,27 @@ public class Problems {
      * range [0, n-1] for n unique tunnels.
      */
     public static int totallyFlooded(List<Tunnel> tunnels) {
-        if(tunnels.isEmpty()){
+        if (tunnels.isEmpty()) {
             return -1;
         }
 
         UnorderedMap<Integer, List<Integer>> adj = new UnorderedMap<>();
 
-        for(Tunnel tunnel : tunnels){
+        for (Tunnel tunnel : tunnels) {
             adj.put(tunnel.getId(), new ArrayList<>());
         }
 
-        for(int i : adj.keys()) {
+        for (int i : adj.keys()) {
             Tunnel a = tunnels.get(i);
-            for(int j : adj.keys()) {
-                if(i == j) {
+            for (int j : adj.keys()) {
+                if (i == j) {
                     continue;
-                };
+                }
                 Tunnel b = tunnels.get(j);
                 double dx = a.getX() - b.getX();
                 double dy = a.getY() - b.getY();
-                double dist = Math.sqrt(dx*dx + dy*dy);
-                if(dist < a.getRadius()+0.000001) {
+                double dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < a.getRadius() + 0.000001) {
                     adj.get(a.getId()).add(b.getId()); // i can flood j
                 }
             }
@@ -266,22 +270,22 @@ public class Problems {
         // Perform the DFS
         UnorderedMap<Integer, List<Integer>> dp = new UnorderedMap<>();
 
-        for(Tunnel a : tunnels){
+        for (Tunnel a : tunnels) {
             List<Integer> queue = new LinkedList<>();
             queue.add(a.getId());
             UnorderedMap<Integer, Integer> visited = new UnorderedMap<>();
 
-            while(!queue.isEmpty()){
-                Integer curr_id = queue.removeLast();
+            while (!queue.isEmpty()) {
+                Integer currentId = queue.removeLast();
 
-                if(visited.get(curr_id) == null){
-                    visited.put(curr_id, 1);
-                    if(dp.get(curr_id) != null){
-                        for(Integer v : dp.get(curr_id)){
+                if (visited.get(currentId) == null) {
+                    visited.put(currentId, 1);
+                    if (dp.get(currentId) != null) {
+                        for (Integer v : dp.get(currentId)) {
                             visited.put(v, 1);
                         }
-                    }else{
-                        queue.addAll(adj.get(curr_id));
+                    } else {
+                        queue.addAll(adj.get(currentId));
                     }
                 }
             }
@@ -289,22 +293,22 @@ public class Problems {
             dp.put(a.getId(), visited.keys());
         }
 
-        int max_id = tunnels.size()+1;
-        int max_affect = 0;
+        int maxId = tunnels.size() + 1;
+        int maxAffect = 0;
 
-        for(Entry<Integer, List<Integer>> entry : dp.entries()){
-            if(entry.getValue().size() > max_affect ||
-                (entry.getValue().size() == max_affect && max_id > entry.getKey())){
-                max_affect = entry.getValue().size();
-                max_id = entry.getKey();
+        for (Entry<Integer, List<Integer>> entry : dp.entries()) {
+            if (entry.getValue().size() > maxAffect
+                || (entry.getValue().size() == maxAffect && maxId > entry.getKey())) {
+                maxAffect = entry.getValue().size();
+                maxId = entry.getKey();
             }
         }
 
 
-        if(max_id == tunnels.size()+1){
+        if (maxId == tunnels.size() + 1) {
             return -1;
         }
-        return tunnels.get(max_id).getId();
+        return tunnels.get(maxId).getId();
     }
 
     /**
@@ -323,21 +327,21 @@ public class Problems {
                                      List<Integer> startingSites) {
         UnorderedMap<Integer, LogicVertex<List<Integer>>> nodes = new UnorderedMap<>();
 
-        for(int site : sites){
+        for (int site : sites) {
             nodes.put(site, new LogicVertex<>(site, new ArrayList<>()));
         }
 
         int logicNodesIndex = -1;
         int ruleIdx = 0;
-        for(List<List<Integer>> rule : rules){
-            if(rule.isEmpty()){
+        for (List<List<Integer>> rule : rules) {
+            if (rule.isEmpty()) {
                 startingSites.add(ruleIdx);
             }
-            for(List<Integer> andNodeRequirements : rule){
+            for (List<Integer> andNodeRequirements : rule) {
                 nodes.put(logicNodesIndex, new LogicVertex<>(logicNodesIndex, List.of(ruleIdx)));
                 nodes.get(logicNodesIndex).setRequirements(andNodeRequirements);
 
-                for(int requirement : andNodeRequirements){
+                for (int requirement : andNodeRequirements) {
                     nodes.get(requirement).getData().add(logicNodesIndex);
                 }
                 logicNodesIndex--;
@@ -345,59 +349,33 @@ public class Problems {
             ruleIdx++;
         }
 
-//        System.out.println("=== DEBUG: Graph Structure ===");
-//        for (int key : nodes.keys()) {
-//            LogicVertex<List<Integer>> v = nodes.get(key);
-//
-//            System.out.print("Node " + key);
-//
-//            if (key < 0) {
-//                System.out.print(" (AND)");
-//            } else {
-//                System.out.print(" (SITE)");
-//            }
-//
-//            System.out.print("  | requires: ");
-//            List<Integer> req = v.getRequirements();
-//            if (req == null || req.isEmpty()) System.out.print("[]");
-//            else System.out.print(req);
-//
-//            System.out.print("  | activates: ");
-//            List<Integer> data = v.getData();
-//            if (data == null || data.isEmpty()) System.out.print("[]");
-//            else System.out.print(data);
-//
-//            System.out.println();
-//        }
-//        System.out.println("=============================");
-
         // Perform DFS
         List<Integer> queue = new ArrayList<>(startingSites);
         UnorderedMap<Integer, Integer> visited = new UnorderedMap<>();
 
-        while(!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             int curr = queue.removeFirst();
 
-            if(visited.get(curr) != null){
+            if (visited.get(curr) != null) {
                 continue;
             }
 
-            if(curr < 0){ // is an AND node
-                if(visited.hasAll(nodes.get(curr).getRequirements())){ // requirements satisifed
+            if (curr < 0) { // is an AND node
+                if (visited.hasAll(nodes.get(curr).getRequirements())) { // requirements satisifed
                     visited.put(curr, 1);
-                    for(int node : nodes.get(curr).getData()){
+                    for (int node : nodes.get(curr).getData()) {
                         queue.add(node);
                     }
                 }
-            }else{
+            } else {
                 visited.put(curr, 1);
                 queue.addAll(nodes.get(curr).getData());
             }
         }
 
         int unvisited = 0;
-        for(int site : sites){
-            if(visited.get(site) == null){
+        for (int site : sites) {
+            if (visited.get(site) == null) {
                 unvisited++;
             }
         }

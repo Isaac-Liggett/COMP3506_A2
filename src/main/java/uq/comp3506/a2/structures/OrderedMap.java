@@ -164,14 +164,14 @@ public class OrderedMap<K extends Comparable<K>, V> implements MapInterface<K, V
      * equal to `key`
      */
     public V nextGeq(K key) {
-        Node<K,V> current = this.root;
+        Node<K, V> current = this.root;
         Node<K, V> successor = null;
 
-        while(current != null){
-            if(current.getKey().compareTo(key) >= 0){
+        while (current != null) {
+            if (current.getKey().compareTo(key) >= 0) {
                 successor = current;
                 current = current.getLeft();
-            }else{
+            } else {
                 current = current.getRight();
             }
         }
@@ -183,14 +183,14 @@ public class OrderedMap<K extends Comparable<K>, V> implements MapInterface<K, V
      * equal to `key`
      */
     public V nextLeq(K key) {
-        Node<K,V> current = this.root;
+        Node<K, V> current = this.root;
         Node<K, V> successor = null;
 
-        while(current != null){
-            if(current.getKey().compareTo(key) <= 0){
+        while (current != null) {
+            if (current.getKey().compareTo(key) <= 0) {
                 successor = current;
                 current = current.getRight();
-            }else{
+            } else {
                 current = current.getLeft();
             }
         }
@@ -203,12 +203,12 @@ public class OrderedMap<K extends Comparable<K>, V> implements MapInterface<K, V
     public List<K> keysInRange(K lo, K hi) {
         ArrayList<K> result = new ArrayList<>();
 
-        if(this.root == null){
+        if (this.root == null) {
             return result;
         }
 
         List<Node<K, V>> stack = new LinkedList<>();
-        Node<K,V> curr = root;
+        Node<K, V> curr = root;
 
         while (curr != null || !stack.isEmpty()) {
             // Reach the left most Node of the curr Node
@@ -220,7 +220,7 @@ public class OrderedMap<K extends Comparable<K>, V> implements MapInterface<K, V
 
             curr = stack.removeFirst();
 
-            if(curr.getKey().compareTo(lo) >= 0 && curr.getKey().compareTo(hi) <= 0){
+            if (curr.getKey().compareTo(lo) >= 0 && curr.getKey().compareTo(hi) <= 0) {
                 result.add(curr.getKey());
             }
 
@@ -277,7 +277,7 @@ public class OrderedMap<K extends Comparable<K>, V> implements MapInterface<K, V
      * T1 T2                T2 T3
      */
     private Node<K, V> rotateRight(Node<K, V> y) {
-        if (y == null){
+        if (y == null) {
             return null;
         }
         Node<K, V> x = y.getLeft();
@@ -285,9 +285,9 @@ public class OrderedMap<K extends Comparable<K>, V> implements MapInterface<K, V
             return y;
         }
 
-        Node<K, V> T2 = x.getRight(); // T2 above
+        Node<K, V> t2 = x.getRight(); // T2 above
         x.setRight(y);
-        y.setLeft(T2);
+        y.setLeft(t2);
         updateHeight(y);
         updateHeight(x);
         return x;
@@ -303,7 +303,7 @@ public class OrderedMap<K extends Comparable<K>, V> implements MapInterface<K, V
      *     T2 T3        T1 T2
      */
     private Node<K, V> rotateLeft(Node<K, V> x) {
-        if (x == null){
+        if (x == null) {
             return null;
         }
         Node<K, V> y = x.getRight();
@@ -311,9 +311,9 @@ public class OrderedMap<K extends Comparable<K>, V> implements MapInterface<K, V
             return x;
         }
 
-        Node<K, V> T2 = y.getLeft(); // T2 above
+        Node<K, V> t2 = y.getLeft(); // T2 above
         y.setLeft(x);
-        x.setRight(T2);
+        x.setRight(t2);
         updateHeight(x);
         updateHeight(y);
         return y;

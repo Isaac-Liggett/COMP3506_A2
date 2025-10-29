@@ -10,6 +10,7 @@
       <list>
         <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">(bundled)</ConfigurationLocation>
         <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">(bundled)</ConfigurationLocation>
+        <ConfigurationLocation id="3368f207-c7e0-4954-b025-a20c330eda9b" type="LOCAL_FILE" scope="All" description="COMP3506 Checkstyle">$PROJECT_DIR$/test/checkstyle.xml</ConfigurationLocation>
       </list>
     </option>
   </component>

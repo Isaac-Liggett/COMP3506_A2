@@ -55,14 +55,14 @@ public class Heap<K extends Comparable<K>, V> {
      * Returns the index of the left child of the node at index i
      */
     private int left(int i) {
-        return 2*i+1;
+        return 2 * i + 1;
     }
 
     /**
      * Returns the index of the right child of the node at index i
      */
     private int right(int i) {
-        return 2*i+2;
+        return 2 * i + 2;
     }
 
     /**
@@ -88,15 +88,17 @@ public class Heap<K extends Comparable<K>, V> {
      */
     private void downHeap(int i) {
         while (true) {
-            int LChild_idx = this.left(i);
-            int RChild_idx = this.right(i);
+            int leftChildIdx = this.left(i);
+            int rightChildIdx = this.right(i);
             int smallest = i;
 
-            if (LChild_idx < size && data.get(LChild_idx).getKey().compareTo(data.get(smallest).getKey()) < 0) {
-                smallest = LChild_idx;
+            if (leftChildIdx < size
+                && data.get(leftChildIdx).getKey().compareTo(data.get(smallest).getKey()) < 0) {
+                smallest = leftChildIdx;
             }
-            if (RChild_idx < size && data.get(RChild_idx).getKey().compareTo(data.get(smallest).getKey()) < 0) {
-                smallest = RChild_idx;
+            if (rightChildIdx < size
+                && data.get(rightChildIdx).getKey().compareTo(data.get(smallest).getKey()) < 0) {
+                smallest = rightChildIdx;
             }
 
             if (smallest == i) {
@@ -150,18 +152,15 @@ public class Heap<K extends Comparable<K>, V> {
      * Note: Return null if empty.
      */
     public Entry<K, V> removeMin() {
-        if(this.isEmpty()){
+        if (this.isEmpty()) {
             return null;
         }
-        Entry<K, V> minElem = this.data.getFirst();
+        final Entry<K, V> minElem = this.data.getFirst();
 
         this.size -= 1;
-
         this.data.set(0, this.data.get(this.size));
         this.data.remove(this.size);
-
         this.downHeap(0);
-
         return minElem;
     }
 
@@ -174,7 +173,7 @@ public class Heap<K extends Comparable<K>, V> {
      * Note: Return null if empty
      */
     public Entry<K, V> peekMin() {
-        if(this.isEmpty()){
+        if (this.isEmpty()) {
             return null;
         }
         return this.data.getFirst();
@@ -194,16 +193,19 @@ public class Heap<K extends Comparable<K>, V> {
     }
 
     /**
-     * Clear all of the data and reset the heap to an empty state/
+     * Clear all of the data and reset the heap to an empty state
      */
     public void clear() {
         this.data.clear();
         this.size = 0;
     }
 
-    public void printHeap(){
+    /**
+     * Prints the heap for debugging
+     */
+    public void printHeap() {
         System.out.print("[ ");
-        for(int i = 0; i < this.size; i++){
+        for (int i = 0; i < this.size; i++) {
             System.out.print("(");
             System.out.print(this.data.get(i).getKey());
             System.out.print(", ");
